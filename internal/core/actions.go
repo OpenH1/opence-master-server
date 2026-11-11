@@ -99,7 +99,7 @@ func (m *Master) Approve(applicationID string, quota int, actor string) (*model.
 		// (a Discord applicant is told by the bot)
 		return p, nil
 	}
-	m.Notifier.Mail(a.Email, "Your OpenCE master application is approved",
+	m.Notifier.Mail(a.Email, "Your "+m.GameName()+" master application is approved",
 		fmt.Sprintf("Hello %s,\n\nYour application %s to %s is approved: you are publisher %s, with up to %d "+
 			"servers at once. A server publishing with key %s is listed at its next publish (within 30 seconds), "+
 			"once its UDP port answers the master's probe. The masters share approvals: the other official "+
@@ -140,7 +140,7 @@ func (m *Master) Deny(applicationID, reason, actor string) error {
 	if m.Contact() != "" {
 		contact = "\nContact: " + m.Contact() + "\n"
 	}
-	m.Notifier.Mail(a.Email, "Your OpenCE master application",
+	m.Notifier.Mail(a.Email, "Your "+m.GameName()+" master application",
 		fmt.Sprintf("Hello %s,\n\nYour application %s to %s was not approved: %s\n%s", a.Name, a.ID,
 			m.Name(), reason, contact))
 	return nil

@@ -2,6 +2,8 @@ package core
 
 import (
 	"strings"
+
+	"github.com/OpenCommunityEdition/opence-master-server/internal/config"
 )
 
 // The master's name and contact in the database, set on first launch (the
@@ -11,8 +13,9 @@ const (
 	keyContact = "master.contact"
 )
 
-// UnnamedMaster is the name shown until the setup names the master.
-const UnnamedMaster = "OpenCE master (not set up)"
+// UnnamedMaster is the name shown until the setup names the master (the
+// game's name before it: GameName's).
+const UnnamedMaster = " master (not set up)"
 
 // Profile is the master's name and admin contact.
 type Profile struct {
@@ -51,7 +54,25 @@ func (m *Master) Name() string {
 	if name := m.profile.Load().Name; name != "" {
 		return name
 	}
-	return UnnamedMaster
+	return m.GameName() + UnnamedMaster
+}
+
+// GameName is the game's (or the project's) name, in the pages' and the
+// messages' text (MASTER_GAME_NAME). It is never on the wire.
+func (m *Master) GameName() string {
+	if m.Config != nil && m.Config.GameName != "" {
+		return m.Config.GameName
+	}
+	return config.DefaultGameName
+}
+
+// ProjectURL is the source of the program running, for the pages' footer
+// (MASTER_PROJECT_URL).
+func (m *Master) ProjectURL() string {
+	if m.Config != nil && m.Config.ProjectURL != "" {
+		return m.Config.ProjectURL
+	}
+	return config.DefaultProjectURL
 }
 
 // Contact is the master's admin contact (empty: none given).

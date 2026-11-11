@@ -118,7 +118,7 @@ func linkPage(p view.Page, code, keyID, authorize string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = view.CardHeader("Link Discord to the OpenCE game showing "+code, "").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = view.CardHeader("Link Discord to the "+p.Game+" game showing "+code, "").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -309,7 +309,7 @@ func manageLoginPage(p view.Page, ready bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = view.CardHeader("Your linked game keys", "The OpenCE games you linked to your Discord account on this master.").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = view.CardHeader("Your linked game keys", "The "+p.Game+" games you linked to your Discord account on this master.").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

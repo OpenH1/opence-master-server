@@ -103,7 +103,7 @@ func body(t *testing.T, response *http.Response, err error) (int, string) {
 func TestFirstLaunchSetup(t *testing.T) {
 	m, pages, server := newMaster(t, nil)
 	code := pages.SetupCode()
-	if code == "" || m.Named() || m.Name() != core.UnnamedMaster {
+	if code == "" || m.Named() || m.Name() != "OpenCE"+core.UnnamedMaster {
 		t.Fatalf("set up already: %q %q", code, m.Name())
 	}
 	browser := &http.Client{Jar: &cookieJar{}}

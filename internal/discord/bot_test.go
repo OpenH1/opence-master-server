@@ -1459,3 +1459,17 @@ func TestClientSecret(t *testing.T) {
 		t.Fatalf("the page:\n%s", page)
 	}
 }
+
+// TestApplyGameName checks that /apply names MASTER_GAME_NAME's game.
+func TestApplyGameName(t *testing.T) {
+	_, c := connected(t, func(cfg *config.Config) { cfg.GameName = "GOAT H1" })
+	if d := c.commands[guild][0].Description; !strings.Contains(d, "Apply to publish GOAT H1 dedicated servers") {
+		t.Fatalf("/apply's description: %s", d)
+	}
+	in := command(applicant)
+	in.Options = map[string]string{"region": "eu", "servers": "1"}
+	if r := c.do(t, in); !strings.Contains(r.Message.Content, "**Apply to publish GOAT H1 dedicated servers on ") ||
+		strings.Contains(r.Message.Content, "OpenCE") {
+		t.Fatalf("/apply's text: %s", r.Message.Content)
+	}
+}
