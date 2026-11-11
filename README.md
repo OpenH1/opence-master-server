@@ -270,7 +270,7 @@ are least restricted, never one a flood drained while a fuller one is held.
 | --- | --- | --- |
 | `MASTER_NAME` | (the setup's) | The master's name, in its lists and pages |
 | `MASTER_GAME_NAME` | `OpenCE` | The game's (or the project's) name in the pages', the bot's and the mails' text (never on the wire: the protocol's names stay) |
-| `MASTER_PROJECT_URL` | the project's | The source of the program running, linked from the pages' footer: a fork links its own (its tag's), as the AGPL asks |
+| `MASTER_PROJECT_URL` | the project's, at this version's tag | The source of the program running, linked from the pages' footer: a fork links its own (its tag's), as the AGPL asks |
 | `MASTER_CONTACT` | (the setup's) | Who answers for the master, optional: an e-mail address or a URL |
 | `MASTER_DATA_POLICY` | addresses kept 7 days, never served, no data sold | The policy shown on the pages |
 | `MASTER_PUBLIC_URL` | | The public HTTPS origin, for the links in the bot's messages and in mails |

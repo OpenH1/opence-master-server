@@ -91,8 +91,8 @@ var secrets = map[string]bool{"MASTER_ADMIN_TOKEN": true, "MASTER_SMTP_PASSWORD"
 var Options = []Option{
 	{"MASTER_NAME", "name", "the master's name, shown in its lists and pages (else set by the first launch's setup)", ""},
 	{"MASTER_GAME_NAME", "game-name", "the game's (or the project's) name, in the pages, the bot's and the mails' text", DefaultGameName},
-	{"MASTER_PROJECT_URL", "project-url", "the source of the program running, linked from the pages' footer (a fork's: its tag)",
-		DefaultProjectURL},
+	{"MASTER_PROJECT_URL", "project-url", "the source of the program running, linked from the pages' footer " +
+		"(default: the project's, at this version's tag)", ""},
 	{"MASTER_CONTACT", "contact", "the admin contact: an e-mail address or a URL (optional; else set on the admin pages)", ""},
 	{"MASTER_DATA_POLICY", "data-policy", "the data policy shown on the pages",
 		"Addresses are kept 7 days for probes and abuse handling and never served; no data is sold."},
@@ -143,7 +143,7 @@ var Options = []Option{
 		"(install it at once) or off", "notify"},
 	{"MASTER_UPDATE_INTERVAL", "update-interval", "how often the releases are checked", "6h"},
 	{"MASTER_UPDATE_URL", "update-url", "the latest release, on GitHub's API (a fork's)",
-		"https://api.github.com/repos/OpenCommunityEdition/opence-master-server/releases/latest"},
+		"https://api.github.com/repos/OpenH1/opence-master-server/releases/latest"},
 	{"MASTER_UPDATE_KEY", "update-key", "the release key's public key, 64 hex digits (a fork's; default the project's)", ""},
 	{"MASTER_NETLIST", "netlist", "build and serve the netlist (GET /v1/netlist): on or off", "on"},
 	{"MASTER_NETLIST_INTERVAL", "netlist-interval", "how often the netlist's sources are fetched (but Tor's)", "24h"},
@@ -163,7 +163,7 @@ var Options = []Option{
 // its own source, as the AGPL asks).
 const (
 	DefaultGameName   = "OpenCE"
-	DefaultProjectURL = "https://github.com/OpenCommunityEdition/opence-master-server"
+	DefaultProjectURL = "https://github.com/OpenH1/opence-master-server"
 )
 
 // The netlist's default sources (X4BNet's lists_vpn, MIT).
@@ -245,10 +245,8 @@ func Load(values map[string]*string) (*Config, error) {
 	if len(c.GameName) > 32 {
 		errs = append(errs, errors.New("MASTER_GAME_NAME: 32 characters at most"))
 	}
-	if c.ProjectURL == "" {
-		c.ProjectURL = DefaultProjectURL
-	}
-	if u, e := url.Parse(c.ProjectURL); e != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {
+	if u, e := url.Parse(c.ProjectURL); c.ProjectURL != "" &&
+		(e != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "") {
 		errs = append(errs, errors.New("MASTER_PROJECT_URL: an http(s) URL"))
 	}
 	c.UpdateInterval, err = duration(get("MASTER_UPDATE_INTERVAL"))

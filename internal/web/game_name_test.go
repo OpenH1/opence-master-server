@@ -53,7 +53,8 @@ func TestGameName(t *testing.T) {
 	}
 }
 
-// TestGameNameDefault checks that the defaults are upstream's.
+// TestGameNameDefault checks the defaults: OpenCE's name, the project's
+// source (at the version's tag, for a release).
 func TestGameNameDefault(t *testing.T) {
 	h := newLinkHarness(t, nil)
 	_, _, page := h.get(browser(), h.server.URL+"/")

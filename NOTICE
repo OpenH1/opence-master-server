@@ -12,3 +12,10 @@ pages', the Discord bot's, the mails' and the help's text is a setting
 (MASTER_GAME_NAME, default "OpenCE"), and the pages' footer links the
 source of the version running (MASTER_PROJECT_URL). The protocol, the
 stored data and their names are upstream's, unchanged.
+
+Modified on 2026-11-11 by the OpenH1 contributors: the releases are the
+fork's (MASTER_UPDATE_URL's default), signed by the fork's master release
+key (internal/update/key.go), and the footer links the source at the
+running version's tag unless MASTER_PROJECT_URL says otherwise. Versions
+are v<major>.<minor>.1<upstream patch, two digits><revision, two digits>:
+v0.1.10801 is upstream's v0.1.8 and the fork's first revision.
