@@ -1,0 +1,14 @@
+opence-master
+Copyright the OpenCE contributors. Licensed under the GNU Affero General
+Public License, version 3 or later (LICENSE).
+Upstream: https://github.com/OpenCommunityEdition/opence-master-server
+
+This is a modified version, OpenH1's fork
+(https://github.com/OpenH1/opence-master-server), which runs the GOAT H1
+master.
+
+Modified on 2026-11-10 by the OpenH1 contributors: the game's name in the
+pages', the Discord bot's, the mails' and the help's text is a setting
+(MASTER_GAME_NAME, default "OpenCE"), and the pages' footer links the
+source of the version running (MASTER_PROJECT_URL). The protocol, the
+stored data and their names are upstream's, unchanged.

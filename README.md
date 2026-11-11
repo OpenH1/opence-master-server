@@ -597,3 +597,6 @@ Each is compatible with the AGPL 3.0; `go.sum` pins their checksums.
 ## Licence
 
 AGPL-3.0-or-later. Copyright the OpenCE contributors.
+
+This is a modified version (see `NOTICE`): OpenH1's fork, for the GOAT H1
+master.
