@@ -2,9 +2,12 @@
 # It builds the binaries (and attaches install.sh, compose.yaml, compose.proxy.yaml and the
 # Caddyfile, which the installer fetches), signs their SHA256SUMS with the release key (the
 # RELEASE_SIGNING_KEY secret: the masters' updater installs nothing else),
-# pushes the multi-arch image to ghcr.io (latest, 1.2.0 and 1.2), and then
-# publishes the GitHub release, which the masters see within their
-# MASTER_UPDATE_INTERVAL.
+# and then publishes the GitHub release, which the masters see within their
+# MASTER_UPDATE_INTERVAL. (OpenH1's fork: no image; RELEASE_SIGNING_KEY is
+# the master release key's seed, whose public half is internal/update/key.go.
+# Its versions: v<upstream major>.<upstream minor>.1<upstream patch, two
+# digits><the fork's revision, two digits>, v0.1.10801 for upstream's v0.1.8
+# and the fork's first.)
 name: Release
 
 on:
@@ -19,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -53,16 +55,6 @@ jobs:
         run: |
           go run ./cmd/release-sign sign dist/SHA256SUMS
           go run ./cmd/release-sign verify dist/SHA256SUMS
-      - name: the image, to ghcr.io
-        env:
-          TOKEN: ${{ github.token }}
-        run: |
-          echo "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-          image="ghcr.io/${GITHUB_REPOSITORY,,}"
-          version="${GITHUB_REF_NAME#v}"
-          docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --build-arg "VERSION=$GITHUB_REF_NAME" \
-            -t "$image:latest" -t "$image:$version" -t "$image:${version%.*}" --push .
       - name: the GitHub release (last, so the masters see it once everything is out)
         env:
           GH_TOKEN: ${{ github.token }}

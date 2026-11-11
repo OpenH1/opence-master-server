@@ -44,8 +44,9 @@ const (
 	Auto = "auto"
 )
 
-// DefaultSource is the project's latest release, on GitHub's API.
-const DefaultSource = "https://api.github.com/repos/OpenCommunityEdition/opence-master-server/releases/latest"
+// DefaultSource is the project's latest release, on GitHub's API (OpenH1's
+// fork's).
+const DefaultSource = "https://api.github.com/repos/OpenH1/opence-master-server/releases/latest"
 
 // the limits of what is downloaded
 const (

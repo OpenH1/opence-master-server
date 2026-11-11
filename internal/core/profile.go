@@ -67,10 +67,14 @@ func (m *Master) GameName() string {
 }
 
 // ProjectURL is the source of the program running, for the pages' footer
-// (MASTER_PROJECT_URL).
+// (MASTER_PROJECT_URL; else the project's at this version's tag, so an
+// update links its own source).
 func (m *Master) ProjectURL() string {
 	if m.Config != nil && m.Config.ProjectURL != "" {
 		return m.Config.ProjectURL
+	}
+	if strings.HasPrefix(Version, "v") {
+		return config.DefaultProjectURL + "/tree/" + Version
 	}
 	return config.DefaultProjectURL
 }
