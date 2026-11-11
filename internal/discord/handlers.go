@@ -264,7 +264,7 @@ func (b *Bot) applyCommand(i *Interaction) Reply {
 	if !b.M.Config.RequireProof {
 		proof = "Optionally (an application without it is flagged as unproven), show that you hold the key: run"
 	}
-	text := fmt.Sprintf("**Apply to publish OpenCE dedicated servers on %s**\n"+
+	text := fmt.Sprintf("**Apply to publish %s dedicated servers on %s**\n"+
 		"1. On the server, make its publisher key once with `halo --server --keygen`: it writes `publisher.key` "+
 		"beside `config.toml` and prints the public key (`ed25519:...`) and its key id. The private key never "+
 		"leaves the server.\n"+
@@ -274,7 +274,7 @@ func (b *Bot) applyCommand(i *Interaction) Reply {
 		"You apply for **%d** %s at once, in **%s** (run `/apply` again to choose otherwise).\n"+
 		"Your server may publish meanwhile: the master tells it `publisher_pending` until an approver decides, "+
 		"and lists it at its next publish after an approval. You are told of the decision by a direct message. "+
-		"The masters share approvals, so one application is enough.", escape(b.M.Name()), proof, nonce,
+		"The masters share approvals, so one application is enough.", escape(b.M.GameName()), escape(b.M.Name()), proof, nonce,
 		servers, plural(servers, "server", "servers"), where)
 	return ephemeral(text, ButtonSpec{ID: idForm + formState(nonce, servers, region), Label: "Fill in the application",
 		Style: Primary})

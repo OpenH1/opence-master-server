@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/a-h/templ"
@@ -21,8 +22,12 @@ import (
 
 // Page is what every page's layout reads.
 type Page struct {
-	Title    string
-	Master   string
+	Title  string
+	Master string
+	// the game's name (MASTER_GAME_NAME) and the program's source
+	// (MASTER_PROJECT_URL)
+	Game     string
+	Source   string
 	Contact  string
 	Policy   string
 	KeyID    string
@@ -41,8 +46,32 @@ type Page struct {
 
 // For fills a page's common fields from the master.
 func For(m *core.Master, title string) Page {
-	return Page{Title: title, Master: m.Name(), Contact: m.Contact(), Policy: m.Config.DataPolicy,
-		KeyID: m.KeyID, Version: core.Version, Protocol: core.Protocol}
+	return Page{Title: title, Master: m.Name(), Game: m.GameName(), Source: m.ProjectURL(), Contact: m.Contact(),
+		Policy: m.Config.DataPolicy, KeyID: m.KeyID, Version: core.Version, Protocol: core.Protocol}
+}
+
+// Badge is the header's mark: the game name's last word, its last two
+// letters when it is longer than three ("OpenCE": CE, "GOAT H1": H1).
+func (p Page) Badge() string {
+	fields := strings.Fields(p.Game)
+	if len(fields) == 0 {
+		return "CE"
+	}
+	last := []rune(fields[len(fields)-1])
+	if len(last) > 3 {
+		last = last[len(last)-2:]
+	}
+	return strings.ToUpper(string(last))
+}
+
+// SourceText is the source's link as the footer writes it, without its
+// scheme.
+func (p Page) SourceText() string {
+	text, found := strings.CutPrefix(p.Source, "https://")
+	if !found {
+		text = strings.TrimPrefix(p.Source, "http://")
+	}
+	return text
 }
 
 // Render writes a page: rendered whole first, so a failure answers an error

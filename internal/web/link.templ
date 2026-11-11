@@ -16,7 +16,7 @@ templ narrowCard(p view.Page) {
 // linkPage shows the game's confirmation code and the way to Discord.
 templ linkPage(p view.Page, code, keyID, authorize string) {
 	@narrowCard(p) {
-		@view.CardHeader("Link Discord to the OpenCE game showing "+code, "")
+		@view.CardHeader("Link Discord to the "+p.Game+" game showing "+code, "")
 		<div class="space-y-4 text-sm leading-relaxed">
 			<p class="text-center"><span id="link-code" class="inline-block rounded-lg border border-line bg-fg/5 px-4 py-2 font-mono text-2xl font-semibold tracking-widest">{ code }</span></p>
 			<p>Check that the game in front of you shows this code. If it does not, close this page: someone else's game would get your Discord account.</p>
@@ -41,7 +41,7 @@ templ linkedPage(p view.Page, name, code string) {
 // manageLoginPage asks for a Discord login to list the account's keys.
 templ manageLoginPage(p view.Page, ready bool) {
 	@narrowCard(p) {
-		@view.CardHeader("Your linked game keys", "The OpenCE games you linked to your Discord account on this master.")
+		@view.CardHeader("Your linked game keys", "The "+p.Game+" games you linked to your Discord account on this master.")
 		<div class="space-y-4 text-sm leading-relaxed">
 			if ready {
 				<p class="text-muted">Log in with the Discord account you linked to see its keys, unlink them, or delete everything this master keeps of it.</p>

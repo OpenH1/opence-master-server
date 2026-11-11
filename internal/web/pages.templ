@@ -25,7 +25,7 @@ templ layout(p view.Page) {
 		<header class="sticky top-0 z-10 border-b border-line bg-canvas/80 backdrop-blur">
 			<div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
 				<a href="/" class="flex items-center gap-2.5 font-semibold tracking-tight">
-					<span class="grid size-7 place-items-center rounded-md bg-fg text-[0.6875rem] font-bold text-canvas">CE</span>
+					<span class="grid size-7 place-items-center rounded-md bg-fg text-[0.6875rem] font-bold text-canvas">{ p.Badge() }</span>
 					<h1 class="text-base">{ p.Master }</h1>
 				</a>
 				<nav class="flex flex-wrap items-center gap-1">
@@ -40,14 +40,14 @@ templ layout(p view.Page) {
 		</main>
 		<footer class="mx-auto max-w-5xl px-4 pb-8 text-xs text-muted">
 			<div class="space-y-2 border-t border-line pt-8">
-				<p>An OpenCE master server (protocol { strconv.Itoa(p.Protocol) }, opence-master { p.Version }). It lists dedicated servers whose operators it has approved; every entry carries the host's own signed listing, and the list is signed with the master's key <code>{ p.KeyID }</code>.</p>
+				<p>A master server for { p.Game } (protocol { strconv.Itoa(p.Protocol) }, version { p.Version }). It lists dedicated servers whose operators it has approved; every entry carries the host's own signed listing, and the list is signed with the master's key <code>{ p.KeyID }</code>.</p>
 				<p>
 					if p.Contact != "" {
 						Contact: { p.Contact }.
 					}
 					{ p.Policy }
 				</p>
-				<p>The source of this program is at <a href="https://github.com/OpenCommunityEdition/opence-master-server">github.com/OpenCommunityEdition/opence-master-server</a> (AGPL-3.0-or-later).</p>
+				<p>The source of this program is at <a href={ templ.SafeURL(p.Source) }>{ p.SourceText() }</a> (AGPL-3.0-or-later).</p>
 				<p><a href="/privacy">Privacy, and the netlist's sources</a> · <a href="/link/manage">Your linked game keys</a></p>
 			</div>
 		</footer>
@@ -150,7 +150,7 @@ templ applyPage(p view.Page, invite string, requireProof, accepting bool) {
 	@layout(p) {
 		<div>
 			<h2 class="text-2xl">Apply to publish servers</h2>
-			<p class="mt-1 max-w-3xl text-sm text-muted">An operator who runs OpenCE dedicated servers applies once, with the public key of their publisher key, through this master's Discord bot: applications are not taken on this website.</p>
+			<p class="mt-1 max-w-3xl text-sm text-muted">An operator who runs { p.Game } dedicated servers applies once, with the public key of their publisher key, through this master's Discord bot: applications are not taken on this website.</p>
 		</div>
 		if !accepting {
 			@view.Alert(view.Warn) {

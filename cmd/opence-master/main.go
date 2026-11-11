@@ -46,7 +46,8 @@ import (
 	"github.com/OpenCommunityEdition/opence-master-server/internal/web"
 )
 
-const usage = `opence-master: an OpenCE master server (protocol 1)
+// usage is the help; %s is the game's name (help).
+const usage = `opence-master: a master server for %s (protocol 1)
 
 Usage:
   opence-master serve [options]                 serve the master
@@ -84,10 +85,20 @@ Usage:
 Every option is also an environment variable; "opence-master serve -h" lists them.
 `
 
+// help is the usage with the game's name (MASTER_GAME_NAME), read before
+// the options are.
+func help() string {
+	name := strings.TrimSpace(os.Getenv("MASTER_GAME_NAME"))
+	if name == "" {
+		name = config.DefaultGameName
+	}
+	return fmt.Sprintf(usage, name)
+}
+
 // exit codes: 1 a failure, 2 bad usage or configuration
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprint(os.Stderr, usage)
+		fmt.Fprint(os.Stderr, help())
 		os.Exit(2)
 	}
 	command, args := os.Args[1], os.Args[2:]
@@ -107,9 +118,9 @@ func main() {
 	case "version", "--version":
 		fmt.Printf("opence-master %s (protocol %d)\n", core.Version, core.Protocol)
 	case "help", "-h", "--help":
-		fmt.Print(usage)
+		fmt.Print(help())
 	default:
-		fmt.Fprintf(os.Stderr, "opence-master: unknown command %q\n\n%s", command, usage)
+		fmt.Fprintf(os.Stderr, "opence-master: unknown command %q\n\n%s", command, help())
 		os.Exit(2)
 	}
 	if err != nil {

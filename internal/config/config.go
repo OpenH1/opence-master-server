@@ -18,6 +18,8 @@ import (
 // Config is every option.
 type Config struct {
 	Name                string
+	GameName            string
+	ProjectURL          string
 	Contact             string
 	DataPolicy          string
 	PublicURL           string
@@ -88,6 +90,9 @@ var secrets = map[string]bool{"MASTER_ADMIN_TOKEN": true, "MASTER_SMTP_PASSWORD"
 // Options is every option, in the help's order.
 var Options = []Option{
 	{"MASTER_NAME", "name", "the master's name, shown in its lists and pages (else set by the first launch's setup)", ""},
+	{"MASTER_GAME_NAME", "game-name", "the game's (or the project's) name, in the pages, the bot's and the mails' text", DefaultGameName},
+	{"MASTER_PROJECT_URL", "project-url", "the source of the program running, linked from the pages' footer (a fork's: its tag)",
+		DefaultProjectURL},
 	{"MASTER_CONTACT", "contact", "the admin contact: an e-mail address or a URL (optional; else set on the admin pages)", ""},
 	{"MASTER_DATA_POLICY", "data-policy", "the data policy shown on the pages",
 		"Addresses are kept 7 days for probes and abuse handling and never served; no data is sold."},
@@ -153,6 +158,14 @@ var Options = []Option{
 		"https://check.torproject.org/torbulkexitlist"},
 }
 
+// The game's name and the source's link, unless MASTER_GAME_NAME and
+// MASTER_PROJECT_URL set them (a fork's master names its own game and links
+// its own source, as the AGPL asks).
+const (
+	DefaultGameName   = "OpenCE"
+	DefaultProjectURL = "https://github.com/OpenCommunityEdition/opence-master-server"
+)
+
 // The netlist's default sources (X4BNet's lists_vpn, MIT).
 const (
 	DefaultASNURLs = "https://raw.githubusercontent.com/X4BNet/lists_vpn/main/input/datacenter/ASN.txt," +
@@ -203,7 +216,8 @@ func boolean(text string) (bool, error) {
 func Load(values map[string]*string) (*Config, error) {
 	get := func(env string) string { return strings.TrimSpace(*values[env]) }
 	c := &Config{
-		Name: get("MASTER_NAME"), Contact: get("MASTER_CONTACT"), DataPolicy: get("MASTER_DATA_POLICY"),
+		Name: get("MASTER_NAME"), GameName: get("MASTER_GAME_NAME"), ProjectURL: get("MASTER_PROJECT_URL"),
+		Contact: get("MASTER_CONTACT"), DataPolicy: get("MASTER_DATA_POLICY"),
 		PublicURL: strings.TrimRight(get("MASTER_PUBLIC_URL"), "/"), DB: get("MASTER_DB"), Key: get("MASTER_KEY"),
 		AdminToken: secret(values, "MASTER_ADMIN_TOKEN"), NotifyWebhook: get("MASTER_NOTIFY_WEBHOOK"),
 		DiscordToken: secret(values, "MASTER_DISCORD_TOKEN"), DiscordGuild: get("MASTER_DISCORD_GUILD"),
@@ -224,6 +238,18 @@ func Load(values map[string]*string) (*Config, error) {
 		if e != nil {
 			errs = append(errs, fmt.Errorf("%s: %w", env, e))
 		}
+	}
+	if c.GameName == "" {
+		c.GameName = DefaultGameName
+	}
+	if len(c.GameName) > 32 {
+		errs = append(errs, errors.New("MASTER_GAME_NAME: 32 characters at most"))
+	}
+	if c.ProjectURL == "" {
+		c.ProjectURL = DefaultProjectURL
+	}
+	if u, e := url.Parse(c.ProjectURL); e != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {
+		errs = append(errs, errors.New("MASTER_PROJECT_URL: an http(s) URL"))
 	}
 	c.UpdateInterval, err = duration(get("MASTER_UPDATE_INTERVAL"))
 	check(err, "MASTER_UPDATE_INTERVAL")
