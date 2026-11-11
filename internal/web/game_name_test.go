@@ -10,7 +10,7 @@ import (
 	"github.com/OpenCommunityEdition/opence-master-server/internal/sign"
 )
 
-// tags is what a page's visible text is not: its markup.
+// tags is a page's markup, taken out of what an error shows.
 var tags = regexp.MustCompile(`(?s)<[^>]*>`)
 
 // TestGameName checks that MASTER_GAME_NAME names the game on every page a
